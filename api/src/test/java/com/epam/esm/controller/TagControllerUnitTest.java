@@ -40,13 +40,16 @@ class TagControllerUnitTest {
         TagDto dto = new TagDto();
         dto.setName("sea");
         dto.setId(1);
-        when(tagService.find(1)).thenReturn(new Tag(1, "sea"));
-        when(tagBuilder.build(new Tag(1, "sea"))).thenReturn(dto);
+        Tag testTag = new Tag();
+        testTag.setId(1);
+        testTag.setName("sea");
+        when(tagService.find(1)).thenReturn(testTag);
+        when(tagBuilder.build(testTag)).thenReturn(dto);
 
         assertEquals(dto, tagController.findById(1));
 
         verify(tagService).find(1);
-        verify(tagBuilder).build(new Tag(1, "sea"));
+        verify(tagBuilder).build(testTag);
     }
 
     @Test
@@ -59,8 +62,14 @@ class TagControllerUnitTest {
     @Test
     void getAll_getAllTags_returnedTags() {
         ArrayList<Tag> tags = new ArrayList<>();
-        tags.add(new Tag(1, "sea"));
-        tags.add(new Tag(2, "water"));
+        Tag testTag1 = new Tag();
+        testTag1.setId(1);
+        testTag1.setName("sea");
+        Tag testTag2 = new Tag();
+        testTag2.setId(2);
+        testTag2.setName("water");
+        tags.add(testTag1);
+        tags.add(testTag2);
         TagDto firstTagDto = new TagDto();
         firstTagDto.setId(1);
         firstTagDto.setName("sea");
@@ -72,14 +81,14 @@ class TagControllerUnitTest {
         tagsDto.add(secondTagDto);
 
         when(tagService.findAll()).thenReturn(tags);
-        when(tagBuilder.build(new Tag(1, "sea"))).thenReturn(firstTagDto);
-        when(tagBuilder.build(new Tag(2, "water"))).thenReturn(secondTagDto);
+        when(tagBuilder.build(testTag1)).thenReturn(firstTagDto);
+        when(tagBuilder.build(testTag2)).thenReturn(secondTagDto);
 
         assertEquals(tagController.findAll(), tagsDto);
 
         verify(tagService).findAll();
-        verify(tagBuilder).build(new Tag(1, "sea"));
-        verify(tagBuilder).build(new Tag(2, "water"));
+        verify(tagBuilder).build(testTag1);
+        verify(tagBuilder).build(testTag2);
     }
 
     @Test
@@ -87,13 +96,16 @@ class TagControllerUnitTest {
         TagDto tagDto = new TagDto();
         tagDto.setId(1);
         tagDto.setName("sea");
+        Tag testTag = new Tag();
+        testTag.setId(1);
+        testTag.setName("sea");
 
-        when(tagBuilder.build(tagDto)).thenReturn(new Tag(1, "sea"));
+        when(tagBuilder.build(tagDto)).thenReturn(testTag);
 
         tagBuilder.build(tagDto);
-        tagService.create(new Tag(1, "sea"));
+        tagService.create(testTag);
 
         verify(tagBuilder).build(tagDto);
-        verify(tagService).create(new Tag(1, "sea"));
+        verify(tagService).create(testTag);
     }
 }

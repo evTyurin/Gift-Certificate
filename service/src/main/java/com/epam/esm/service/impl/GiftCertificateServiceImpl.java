@@ -13,8 +13,9 @@ import com.epam.esm.service.util.SqlQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class implements GiftCertificateService interface
@@ -28,6 +29,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     private final GiftCertificateDAO giftCertificateDAO;
     private final TagDAO tagDAO;
     private final SqlQueryBuilder sqlQueryBuilder;
+    private final LocalDateTime localDateTime;
 
     public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO,
                                       TagDAO tagDAO,
@@ -35,6 +37,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         this.giftCertificateDAO = giftCertificateDAO;
         this.tagDAO = tagDAO;
         this.sqlQueryBuilder = sqlQueryBuilder;
+        this.localDateTime = LocalDateTime.now();
     }
 
     @Transactional
@@ -43,71 +46,43 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         StringBuilder findCertificateIdByParamsQuery = new StringBuilder();
         findCertificateIdByParamsQuery.append(sqlQueryBuilder.createSearchPartOfQuery(searchQueryCriteria));
         findCertificateIdByParamsQuery.append(sqlQueryBuilder.createOrderedPartOfQuery(orderQueryCriteria));
-        List<Integer> certificatesId = giftCertificateDAO
-                .findCertificatesIdByParams(findCertificateIdByParamsQuery.toString());
-        List<GiftCertificate> giftCertificates = new ArrayList<>();
-        certificatesId.forEach(certificateId -> {
-            GiftCertificate giftCertificate = giftCertificateDAO.find(certificateId);
-            giftCertificate.setTags(tagDAO.findAll(certificateId));
-            giftCertificates.add(giftCertificate);
-        });
-        return giftCertificates;
+        return giftCertificateDAO.findCertificatesByCriterion(findCertificateIdByParamsQuery.toString());
     }
 
     @Transactional
     @Override
     public GiftCertificate find(int giftCertificateId) throws NotFoundException {
-        if (tagDAO.findById(giftCertificateId) == null) {
-            throw new NotFoundException(giftCertificateId,
-                    "40004");
-        }
-        GiftCertificate giftCertificate = giftCertificateDAO.find(giftCertificateId);
-        giftCertificate.setTags(tagDAO.findAll(giftCertificateId));
-        return giftCertificate;
+        return giftCertificateDAO
+                .find(giftCertificateId)
+                .orElseThrow(() -> new NotFoundException(giftCertificateId, 40004));
     }
 
     @Transactional
     @Override
     public void delete(int giftCertificateId) throws NotFoundException {
-        if (giftCertificateDAO.find(giftCertificateId) == null) {
-            throw new NotFoundException(giftCertificateId, ExceptionCode.NOT_FOUND_EXCEPTION);
+        if(!giftCertificateDAO.find(giftCertificateId).isPresent()) {
+            throw new NotFoundException(giftCertificateId, 40004);
         }
-        List<Integer> tagsId = tagDAO.findTagsId(giftCertificateId);
-        tagsId.forEach(tagId -> tagDAO
-                .deleteTagCertificateConnection(giftCertificateId, tagId));
         giftCertificateDAO.delete(giftCertificateId);
     }
 
     @Transactional
     @Override
-    public void update(int giftCertificateId, GiftCertificate giftCertificate) throws EntityExistException, NotFoundException {
-        if ((giftCertificateDAO.find(giftCertificateId) == null)) {
-            throw new NotFoundException(giftCertificateId, ExceptionCode.NOT_FOUND_EXCEPTION);
-        }
+    public void update(int giftCertificateId, GiftCertificate updateGiftCertificate) throws EntityExistException, NotFoundException {
+        GiftCertificate currantGiftCertificate = giftCertificateDAO
+                .find(giftCertificateId)
+                .orElseThrow(() -> new NotFoundException(giftCertificateId, 40004));
 
-        if ((!giftCertificate.getName().equals(giftCertificateDAO.find(giftCertificateId).getName())
-                && giftCertificateDAO.find(giftCertificate.getName()) != null)) {
+        if ((!updateGiftCertificate.getName().equals(currantGiftCertificate.getName())
+                && giftCertificateDAO.find(updateGiftCertificate.getName()) != null)) {
             throw new EntityExistException(giftCertificateId, ExceptionCode.NOT_FOUND_EXCEPTION);
         }
 
-        for (Tag newTag : giftCertificate.getTags()) {
-            if (tagDAO.findByName(newTag.getName()) == null) {
-                tagDAO.create(newTag.getName());
-                int tagId = tagDAO.findId(newTag.getName());
-                tagDAO.addTagCertificateConnection(giftCertificateId, tagId);
-                continue;
-            }
-            if (!tagDAO.ifExistTagCertificateConnection(giftCertificateId, tagDAO.findId(newTag.getName()))) {
-                tagDAO.addTagCertificateConnection(giftCertificateId, tagDAO.findId(newTag.getName()));
-            }
-        }
-
-        List<Tag> oldTags = tagDAO.findAll(giftCertificateId);
-        oldTags
-                .stream()
-                .filter(oldTag -> !giftCertificate.getTags().contains(oldTag))
-                .forEach(oldTag -> tagDAO.deleteTagCertificateConnection(giftCertificateId, oldTag.getId()));
-        giftCertificateDAO.update(giftCertificateId, giftCertificate);
+        List<Tag> tags = addIdToExistTags(updateGiftCertificate.getTags());
+        updateGiftCertificate.setTags(tags);
+        updateGiftCertificate.setLastUpdateDate(localDateTime);
+        updateGiftCertificate.setCreateDate(currantGiftCertificate.getCreateDate());
+        giftCertificateDAO.update(updateGiftCertificate);
     }
 
     @Transactional
@@ -116,14 +91,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (giftCertificateDAO.find(giftCertificate.getName()) != null) {
             throw new EntityExistException(giftCertificate.getId(), ExceptionCode.ENTITY_EXIST_EXCEPTION);
         }
+        giftCertificate.setCreateDate(LocalDateTime.now());
+        giftCertificate.setLastUpdateDate(LocalDateTime.now());
+        List<Tag> tags = addIdToExistTags(giftCertificate.getTags());
+        giftCertificate.setTags(tags);
         giftCertificateDAO.create(giftCertificate);
-        for (Tag tag : giftCertificate.getTags()) {
-            if (tagDAO.findByName(tag.getName()) == null) {
-                tagDAO.create(tag.getName());
-            }
-            int certificateId = giftCertificateDAO.findId(giftCertificate.getName());
-            int tagId = tagDAO.findId(tag.getName());
-            tagDAO.addTagCertificateConnection(certificateId, tagId);
-        }
+    }
+
+    private List<Tag> addIdToExistTags(List<Tag> tags) {
+        return tags.stream().map(tag ->
+                tagDAO.find(tag.getName()).orElse(tag)).collect(Collectors.toList());
     }
 }

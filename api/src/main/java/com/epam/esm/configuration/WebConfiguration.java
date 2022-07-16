@@ -9,7 +9,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.charset.StandardCharsets;
@@ -19,7 +18,6 @@ import java.util.List;
  * The configuration for web application
  */
 @Configuration
-@EnableWebMvc
 @ComponentScan(value = "com.epam.esm")
 public class WebConfiguration implements WebMvcConfigurer {
 

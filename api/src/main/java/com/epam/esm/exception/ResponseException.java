@@ -6,9 +6,9 @@ package com.epam.esm.exception;
 public class ResponseException {
 
     private final String errorMessage;
-    private final String errorCode;
+    private final int errorCode;
 
-    public ResponseException(String errorMessage, String errorCode) {
+    public ResponseException(String errorMessage, int errorCode) {
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;
     }
@@ -17,7 +17,7 @@ public class ResponseException {
         return errorMessage;
     }
 
-    public String getErrorCode() {
+    public int getErrorCode() {
         return errorCode;
     }
 }

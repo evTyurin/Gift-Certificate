@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -17,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
 public class GiftCertificateDto implements Serializable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int id;
@@ -41,71 +45,8 @@ public class GiftCertificateDto implements Serializable {
     @Valid
     private List<TagDto> tags = new ArrayList<>();
 
-    public GiftCertificateDto() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
     @JsonIgnore
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public List<TagDto> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<TagDto> tags) {
-        this.tags = tags;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    public LocalDateTime getLastUpdateDate() {
-        return lastUpdateDate;
-    }
-
-    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
     }
 }

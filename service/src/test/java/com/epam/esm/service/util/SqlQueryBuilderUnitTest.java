@@ -21,20 +21,23 @@ class SqlQueryBuilderUnitTest {
         List<QueryCriteria> queryCriterion = new ArrayList<>();
         queryCriterion.add(new QueryCriteria("tagName", "sea"));
         queryCriterion.add(new QueryCriteria("certificateName", "sea story"));
-        assertEquals("SELECT DISTINCT certificateId FROM (" +
-                        "SELECT gift_certificate.id AS certificateId," +
-                        " gift_certificate.name AS certificateName," +
-                        " gift_certificate.description AS description," +
-                        " gift_certificate.price AS price," +
-                        " gift_certificate.duretion AS duration," +
-                        " gift_certificate.create_date AS createDate," +
-                        " gift_certificate.last_update_date AS lastUpdateDate," +
+        assertEquals("SELECT id, name, description," +
+                        " price, duretion," +
+                        " create_date, last_update_date FROM (" +
+                        "SELECT" +
+                        " gift_certificate.id," +
+                        " gift_certificate.name," +
+                        " gift_certificate.description," +
+                        " gift_certificate.price," +
+                        " gift_certificate.duretion," +
+                        " gift_certificate.create_date," +
+                        " gift_certificate.last_update_date," +
                         " tag.name AS tagName" +
                         " FROM gift_certificate JOIN" +
                         " gift_certificate_has_tag ON" +
                         " gift_certificate_has_tag.gift_certificate_id = gift_certificate.id" +
                         " JOIN tag ON tag.id = gift_certificate_has_tag.tag_id" +
-                        ") AS t WHERE tagName LIKE 'sea' AND certificateName LIKE '%sea story%'",
+                        ") AS t WHERE tagName LIKE 'sea' AND name LIKE '%sea story%'",
                 sqlQueryBuilder.createSearchPartOfQuery(queryCriterion));
     }
 
@@ -43,7 +46,7 @@ class SqlQueryBuilderUnitTest {
         List<QueryCriteria> queryCriterion = new ArrayList<>();
         queryCriterion.add(new QueryCriteria("tagName", "asc"));
         queryCriterion.add(new QueryCriteria("certificateName", "desc"));
-        assertEquals(" ORDER BY tagName asc, certificateName desc",
+        assertEquals(" ORDER BY tagName asc, name desc",
                 sqlQueryBuilder.createOrderedPartOfQuery(queryCriterion));
     }
 }

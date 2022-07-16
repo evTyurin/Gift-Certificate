@@ -35,7 +35,7 @@ public class UtilQueryCriteriaBuilder {
                 .findFirst().orElse(new ArrayList<>());
         for (String criteria : sortCriterion) {
             if (criteria.length() - criteria.replace("-", "").length() != 1) {
-                throw new ExpectationFailedException("40017");
+                throw new ExpectationFailedException(40017);
             }
             queryCriterion.add(new QueryCriteria(criteria.substring(0, criteria.indexOf("-")),
                     criteria.substring(criteria.indexOf("-") + 1)));

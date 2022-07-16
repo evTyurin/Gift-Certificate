@@ -1,89 +1,56 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.dao.mapper.GiftCertificateMapper;
+import com.epam.esm.dao.constants.FieldName;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.constants.FieldName;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class GiftCertificateDAOImpl implements GiftCertificateDAO {
 
-    private final DateTimeFormatter dateTimeFormatter;
-    private final LocalDateTime localDateTime;
-    private final JdbcTemplate jdbcTemplate;
-    private final GiftCertificateMapper giftCertificateMapper;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public GiftCertificateDAOImpl(JdbcTemplate jdbcTemplate,
-                                  GiftCertificateMapper giftCertificateMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.giftCertificateMapper = giftCertificateMapper;
-        dateTimeFormatter = DateTimeFormatter.ofPattern(FieldName.DATE_TIME_FORMAT);
-        localDateTime = LocalDateTime.now();
+    public GiftCertificateDAOImpl() {
     }
 
     @Override
-    public List<Integer> findCertificatesIdByParams(String query) {
-        return jdbcTemplate.queryForList(query, Integer.class);
+    public Optional<GiftCertificate> find(int id) {
+        return Optional.ofNullable(entityManager.find(GiftCertificate.class, id));
     }
 
     @Override
-    public GiftCertificate find(int id) {
-        final String READ_CERTIFICATE_BY_ID = "SELECT * " +
-                "FROM gift_certificate WHERE id = ?";
-        return jdbcTemplate.query(READ_CERTIFICATE_BY_ID,
-                giftCertificateMapper, id)
-                .stream().findAny().orElse(null);
+    public Optional<GiftCertificate> find(String certificateName) {
+        final String FIND_CERTIFICATE_BY_NAME = "SELECT gift_certificate FROM GiftCertificate gift_certificate WHERE gift_certificate.name=:name";
+        TypedQuery<GiftCertificate> query = entityManager.createQuery(FIND_CERTIFICATE_BY_NAME, GiftCertificate.class);
+        query.setParameter(FieldName.NAME, certificateName);
+        return query.getResultStream().findFirst();
     }
 
     @Override
-    public GiftCertificate find(String certificateName) {
-        final String READ_CERTIFICATE_BY_NAME = "SELECT * " +
-                "FROM gift_certificate WHERE name = ?";
-        return jdbcTemplate.query(READ_CERTIFICATE_BY_NAME,
-                giftCertificateMapper, certificateName)
-                .stream().findAny().orElse(null);
+    public List<GiftCertificate> findCertificatesByCriterion(String query) {
+        return (List<GiftCertificate>) entityManager
+                .createNativeQuery(query, GiftCertificate.class).getResultList();
     }
 
     @Override
-    public boolean delete(int id) {
-        final String DELETE_CERTIFICATE_BY_ID = "DELETE" +
-                " FROM gift_certificate WHERE id = ?";
-        return jdbcTemplate.update(DELETE_CERTIFICATE_BY_ID,
-                id) >= 1;
+    public void delete(int id) {
+        entityManager.remove(entityManager.find(GiftCertificate.class, id));
     }
 
     @Override
-    public boolean create(GiftCertificate giftCertificate) {
-        final String CREATE_CERTIFICATE = "INSERT INTO gift_certificate " +
-                "(id, name, description, price, duretion, create_date, last_update_date) VALUES (?,?,?,?,?,?,?)";
-        String timeOfCreation = dateTimeFormatter.format(localDateTime);
-        return jdbcTemplate.update(CREATE_CERTIFICATE, giftCertificate.getId(),
-                giftCertificate.getName(), giftCertificate.getDescription(),
-                giftCertificate.getPrice(), giftCertificate.getDuration(),
-                timeOfCreation, timeOfCreation) >= 1;
+    public void create(GiftCertificate giftCertificate) {
+        entityManager.persist(giftCertificate);
     }
 
     @Override
-    public boolean update(int id, GiftCertificate giftCertificate) {
-        final String UPDATE_CERTIFICATE_BY_ID = "UPDATE" +
-                " gift_certificate SET name=?, description=?, price=?, duretion=?" +
-                " ,last_update_date=? WHERE id=?";
-        return jdbcTemplate.update(UPDATE_CERTIFICATE_BY_ID,
-                giftCertificate.getName(), giftCertificate.getDescription(),
-                giftCertificate.getPrice(), giftCertificate.getDuration(),
-                dateTimeFormatter.format(localDateTime), id) >= 1;
-    }
-
-    @Override
-    public int findId(String certificateName) {
-        final String READ_CERTIFICATE_ID_BY_NAME = "SELECT id FROM gift_certificate WHERE name = ?";
-        return jdbcTemplate.queryForObject(READ_CERTIFICATE_ID_BY_NAME,
-                Integer.class, certificateName);
+    public void update(GiftCertificate giftCertificate) {
+        entityManager.merge(giftCertificate);
     }
 }

@@ -45,7 +45,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
         return new ResponseEntity<>(new ResponseException(messageSource.getMessage("not.readable.message",
-                null, LocaleContextHolder.getLocale()), "40000"),
+                null, LocaleContextHolder.getLocale()), 40000),
                 HttpStatus.BAD_REQUEST);
     }
 
@@ -83,7 +83,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ResponseException> handleNotFoundException(NotFoundException exception) {
         return new ResponseEntity<>(new ResponseException(messageSource.getMessage("not.found.message",
                 new Object[]{exception.getId()}, LocaleContextHolder.getLocale()),
-                exception.getCode()), HttpStatus.NOT_FOUND);
+                exception.getExceptionCode()), HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -96,7 +96,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ResponseException> handleEntityExistException(EntityExistException exception) {
         return new ResponseEntity<>(new ResponseException(messageSource.getMessage("entity.exist.message",
-                null, LocaleContextHolder.getLocale()), exception.getCode()),
+                null, LocaleContextHolder.getLocale()), exception.getExceptionCode()),
                 HttpStatus.CONFLICT);
     }
 
@@ -110,7 +110,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
     public ResponseEntity<ResponseException> handleExpectationFailedException(ExpectationFailedException exception) {
         return new ResponseEntity<>(new ResponseException(messageSource.getMessage("expectation.failed.message",
-                null, LocaleContextHolder.getLocale()), exception.getCode()),
+                null, LocaleContextHolder.getLocale()), exception.getExceptionCode()),
                 HttpStatus.EXPECTATION_FAILED);
     }
 
@@ -123,7 +123,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ResponseException> handleMethodArgumentTypeMismatch() {
         return new ResponseEntity<>(new ResponseException(messageSource.getMessage("invalid.argument.message",
-                null, LocaleContextHolder.getLocale()), "40015"),
+                null, LocaleContextHolder.getLocale()), 40015),
                 HttpStatus.BAD_REQUEST);
     }
 }

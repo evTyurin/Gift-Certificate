@@ -1,20 +1,12 @@
 package com.epam.esm.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public class NotFoundException extends Exception {
 
     private final int id;
-    private final String exceptionCode;
-
-    public NotFoundException(int id, String exceptionCode) {
-        this.id = id;
-        this.exceptionCode = exceptionCode;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getCode() {
-        return exceptionCode;
-    }
+    private final int exceptionCode;
 }

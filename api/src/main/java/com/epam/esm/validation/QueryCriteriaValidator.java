@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Component
 public class QueryCriteriaValidator {
-    private static final String EXPECTATION_FAILED_EXCEPTION_CODE = "40017";
+    private static final int EXPECTATION_FAILED_EXCEPTION_CODE = 40017;
 
     public QueryCriteriaValidator() {
     }

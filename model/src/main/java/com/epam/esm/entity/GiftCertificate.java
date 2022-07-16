@@ -5,19 +5,38 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode
+@Entity
+@Table(name = "gift_certificate")
 public class GiftCertificate implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
     private String description;
     private double price;
-    private int duration;
+    private int duretion;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -26,74 +45,12 @@ public class GiftCertificate implements Serializable {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime lastUpdateDate;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "gift_certificate_has_tag",
+            joinColumns = @JoinColumn(name = "gift_certificate_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private List<Tag> tags;
-
-    public GiftCertificate() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    public LocalDateTime getLastUpdateDate() {
-        return lastUpdateDate;
-    }
-
-    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
 
     @Override
     public String toString() {
@@ -102,31 +59,11 @@ public class GiftCertificate implements Serializable {
         stringBuilder.append(", name='").append(name).append('\'');
         stringBuilder.append(", description='").append(description).append('\'');
         stringBuilder.append(", price=").append(price);
-        stringBuilder.append(", duration=").append(duration);
+        stringBuilder.append(", duration=").append(duretion);
         stringBuilder.append(", createDate=").append(createDate);
         stringBuilder.append(", lastUpdateDate=").append(lastUpdateDate);
         stringBuilder.append(", tags=").append(tags);
         stringBuilder.append('}');
         return stringBuilder.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof GiftCertificate)) return false;
-        GiftCertificate that = (GiftCertificate) o;
-        return Double.compare(that.getPrice(), getPrice()) == 0
-                && getDuration() == that.getDuration()
-                && getName().equals(that.getName())
-                && getDescription().equals(that.getDescription())
-                && getCreateDate().equals(that.getCreateDate())
-                && getLastUpdateDate().equals(that.getLastUpdateDate())
-                && getTags().equals(that.getTags());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getName(), getDescription(), getPrice(),
-                getDuration(), getCreateDate(), getLastUpdateDate(), getTags());
     }
 }

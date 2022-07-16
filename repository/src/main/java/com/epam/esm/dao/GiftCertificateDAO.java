@@ -3,6 +3,7 @@ package com.epam.esm.dao;
 import com.epam.esm.entity.GiftCertificate;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The interface provides methods to work with gift certificates information
@@ -11,20 +12,12 @@ import java.util.List;
 public interface GiftCertificateDAO {
 
     /**
-     * Find list of tags id
-     *
-     * @param query custom query
-     * @return the list of gift certificates id
-     */
-    List<Integer> findCertificatesIdByParams(String query);
-
-    /**
      * Find gift certificate by id
      *
      * @param id the gift certificate id
      * @return the gift certificate entity
      */
-    GiftCertificate find(int id);
+    Optional<GiftCertificate> find(int id);
 
     /**
      * Find gift certificate by name
@@ -32,38 +25,34 @@ public interface GiftCertificateDAO {
      * @param name the gift certificate name
      * @return the gift certificate entity
      */
-    GiftCertificate find(String name);
+    Optional<GiftCertificate> find(String name);
 
     /**
      * Delete gift certificate by id
      *
      * @param id the gift certificate id
-     * @return true in case of success, false if not
      */
-    boolean delete(int id);
+    void delete(int id);
 
     /**
      * Create gift certificate by id
      *
      * @param giftCertificate the gift certificate entity
-     * @return true in case of success, false if not
      */
-    boolean create(GiftCertificate giftCertificate);
+    void create(GiftCertificate giftCertificate);
 
     /**
      * Update exist gift certificate by id
      *
-     * @param id              the gift certificate id which need to update
      * @param giftCertificate the gift certificate entity used for update
-     * @return true in case of success, false if not
      */
-    boolean update(int id, GiftCertificate giftCertificate);
+    void update(GiftCertificate giftCertificate);
 
     /**
-     * Find gift certificate id by name
+     * Find list of gift certificates found/sort by criterion
      *
-     * @param certificateName the gift certificate name
-     * @return the gift certificate id
+     * @param query sql query included found/sort criterion
+     * @return list of giftCertificate found/sort by criterion
      */
-    int findId(String certificateName);
+    List<GiftCertificate> findCertificatesByCriterion(String query);
 }

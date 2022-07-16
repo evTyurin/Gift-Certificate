@@ -26,7 +26,7 @@ public class GiftCertificateBuilder {
         giftCertificate.setName(dto.getName());
         giftCertificate.setPrice(dto.getPrice());
         giftCertificate.setDescription(dto.getDescription());
-        giftCertificate.setDuration(dto.getDuration());
+        giftCertificate.setDuretion(dto.getDuration());
         giftCertificate.setTags(tagBuilder.build(dto));
         return giftCertificate;
     }
@@ -36,7 +36,7 @@ public class GiftCertificateBuilder {
         dto.setId(giftCertificate.getId());
         dto.setDescription(giftCertificate.getDescription());
         dto.setName(giftCertificate.getName());
-        dto.setDuration(giftCertificate.getDuration());
+        dto.setDuration(giftCertificate.getDuretion());
         dto.setPrice(giftCertificate.getPrice());
         dto.setCreateDate(giftCertificate.getCreateDate());
         dto.setLastUpdateDate(giftCertificate.getLastUpdateDate());
