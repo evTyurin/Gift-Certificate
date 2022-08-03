@@ -19,3 +19,4 @@ All exceptions are meaningful and localized on backend side. Exception code mean
 * **40104** - not valid gift certificate price (it must be bigger than 0)
 * **40105** - not valid tag name (length of the field must be between 3 and 50 symbols)
 * **40106** - blank field is invalid
+* **40107** - not valid user id (it must be bigger than 0)

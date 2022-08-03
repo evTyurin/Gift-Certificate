@@ -24,7 +24,9 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring.boot.starter.parent.version>2.6.7</spring.boot.starter.parent.version>
-        <lombok.version>1.16.0</lombok.version>
+        <lombok.version>1.18.24</lombok.version>
+
+        <start-class>com.epam.esm.configuration.WebAppInitializer</start-class>
     </properties>
 
     <dependencies>

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +25,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
@@ -35,8 +38,8 @@ public class GiftCertificate implements Serializable {
     private int id;
     private String name;
     private String description;
-    private double price;
-    private int duretion;
+    private Double price;
+    private Integer duration;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -52,6 +55,15 @@ public class GiftCertificate implements Serializable {
     )
     private List<Tag> tags;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "order_has_gift_certificate",
+            joinColumns = @JoinColumn(name = "gift_certificate_id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id")
+    )
+    private List<Order> orders;
+
+
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder("GiftCertificate{");
@@ -59,7 +71,7 @@ public class GiftCertificate implements Serializable {
         stringBuilder.append(", name='").append(name).append('\'');
         stringBuilder.append(", description='").append(description).append('\'');
         stringBuilder.append(", price=").append(price);
-        stringBuilder.append(", duration=").append(duretion);
+        stringBuilder.append(", duration=").append(duration);
         stringBuilder.append(", createDate=").append(createDate);
         stringBuilder.append(", lastUpdateDate=").append(lastUpdateDate);
         stringBuilder.append(", tags=").append(tags);
