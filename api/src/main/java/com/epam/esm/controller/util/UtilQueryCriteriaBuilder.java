@@ -1,14 +1,11 @@
 package com.epam.esm.controller.util;
 
 import com.epam.esm.entity.QueryCriteria;
-import com.epam.esm.exception.ExpectationFailedException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * The query criteria builder used for building queries for searching and sorting
@@ -16,29 +13,23 @@ import java.util.stream.Collectors;
  */
 @Component
 public class UtilQueryCriteriaBuilder {
-    public UtilQueryCriteriaBuilder() {
-    }
 
     /**
-     * Create part of query for sorting gift certificates by different criterion
+     * Create part of query for sorting gift certificates by sort criterion
      *
-     * @param allCriterion criterion used for sort
-     * @return part of query used for sort
+     * @param criteria criteria used for sort
+     * @return list of query criterion used for sort
      */
-    public List<QueryCriteria> createSortOrder(Map<String, String> allCriterion) throws ExpectationFailedException {
+    public List<QueryCriteria> createSortOrder(String criteria) {
         List<QueryCriteria> queryCriterion = new ArrayList<>();
-        List<String> sortCriterion = allCriterion.keySet().stream()
-                .filter(criteria -> criteria.equals("sort"))
-                .map(criteria -> allCriterion.get("sort"))
-                .map(criteria -> Arrays.stream(criteria.split("[,]"))
-                        .collect(Collectors.toList()))
-                .findFirst().orElse(new ArrayList<>());
-        for (String criteria : sortCriterion) {
-            if (criteria.length() - criteria.replace("-", "").length() != 1) {
-                throw new ExpectationFailedException(40017);
-            }
-            queryCriterion.add(new QueryCriteria(criteria.substring(0, criteria.indexOf("-")),
-                    criteria.substring(criteria.indexOf("-") + 1)));
+        if (criteria != null) {
+            Arrays.stream(criteria.split(","))
+                    .forEach(criteriaValue ->
+                            queryCriterion.add(new QueryCriteria(
+                                    criteriaValue.substring(0, criteriaValue.indexOf("-")),
+                                    criteriaValue.substring(criteriaValue.indexOf("-") + 1))
+                            )
+                    );
         }
         return queryCriterion;
     }
@@ -46,12 +37,32 @@ public class UtilQueryCriteriaBuilder {
     /**
      * Create part of query for searching gift certificates by different criterion
      *
-     * @param searchCriterion criterion used for search
-     * @return part of query used for search
+     * @param tagNames        names of tags
+     * @param certificateName name of gift certificate
+     * @param description     description of gist certificate
+     * @return list of query criterion used for search
      */
-    public List<QueryCriteria> createSearchCriteria(Map<String, String> searchCriterion) {
-        return searchCriterion.keySet().stream().filter(criteria -> !criteria.equals("sort"))
-                .map(criteria -> new QueryCriteria(criteria, searchCriterion.get(criteria)))
-                .collect(Collectors.toList());
+    public List<QueryCriteria> createSearchCriteria(String tagNames,
+                                                    String certificateName,
+                                                    String description) {
+        List<QueryCriteria> queryCriterion = new ArrayList<>();
+        if (tagNames != null) {
+            Arrays.stream(tagNames.split(","))
+                    .forEach(criteriaValue ->
+                            queryCriterion.add(new QueryCriteria(
+                                    "tagName",
+                                    criteriaValue)));
+        }
+        if (certificateName != null) {
+            queryCriterion.add(new QueryCriteria(
+                    "certificateName",
+                    certificateName));
+        }
+        if (description != null) {
+            queryCriterion.add(new QueryCriteria(
+                    "description",
+                    description));
+        }
+        return queryCriterion;
     }
 }

@@ -68,7 +68,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 responseExceptions.add(new ResponseException(messageSource
                         .getMessage(Objects.requireNonNull(objectError.getDefaultMessage()),
                                 new Object[]{objectError.getField(), objectError.getRejectedValue()}, LocaleContextHolder.getLocale()),
-                        Objects.requireNonNull(ExceptionInfo.getExceptionCodeByMessage(objectError.getDefaultMessage())))));
+                        ExceptionInfo.getExceptionCodeByMessage(objectError.getDefaultMessage()))));
         return new ResponseEntity<>(responseExceptions, HttpStatus.BAD_REQUEST);
     }
 
@@ -115,7 +115,36 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     /**
-     * For handling @PathVariable incorrect param
+     * Handle situation when amount of elements per page in URL
+     * are incorrect (less then 1 or bigger then 100)
+     *
+     * @param exception thrown exception
+     * @return custom exception info and http status
+     */
+    @ExceptionHandler(value = PageElementAmountException.class)
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    public ResponseEntity<ResponseException> handlePageElementAmountException(PageElementAmountException exception) {
+        return new ResponseEntity<>(new ResponseException(messageSource.getMessage("page.element.amount.message",
+                null, LocaleContextHolder.getLocale()), exception.getExceptionCode()),
+                HttpStatus.EXPECTATION_FAILED);
+    }
+
+    /**
+     * Handle situation when number of page in URL bigger then amount of pages
+     *
+     * @param exception thrown exception
+     * @return custom exception info and http status
+     */
+    @ExceptionHandler(value = PageNumberException.class)
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    public ResponseEntity<ResponseException> handlePageNumberException(PageNumberException exception) {
+        return new ResponseEntity<>(new ResponseException(messageSource.getMessage("bid.page.number.message",
+                new Object[]{exception.getPagesAmount()}, LocaleContextHolder.getLocale()), exception.getExceptionCode()),
+                HttpStatus.EXPECTATION_FAILED);
+    }
+
+    /**
+     * Handle @PathVariable incorrect param
      *
      * @return custom exception info and http status
      */

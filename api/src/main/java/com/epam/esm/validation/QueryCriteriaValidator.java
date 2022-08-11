@@ -14,9 +14,12 @@ import java.util.List;
 public class QueryCriteriaValidator {
     private static final int EXPECTATION_FAILED_EXCEPTION_CODE = 40017;
 
-    public QueryCriteriaValidator() {
-    }
-
+    /**
+     * Filter all criterion from url for criterion for sort
+     *
+     * @param criterion list of QueryCriteria
+     * @throws ExpectationFailedException indicates that criterion spelling is incorrect
+     */
     public void sortCriteriaValidation(List<QueryCriteria> criterion) throws ExpectationFailedException {
         for (QueryCriteria criteria : criterion) {
             if (!(criteria.getValue().equals("asc") || criteria.getValue().equals("desc"))) {
@@ -30,6 +33,12 @@ public class QueryCriteriaValidator {
         }
     }
 
+    /**
+     * Filter all criterion from url for criterion for search
+     *
+     * @param criterion list of QueryCriteria
+     * @throws ExpectationFailedException indicates that criterion spelling is incorrect
+     */
     public void searchCriteriaValidation(List<QueryCriteria> criterion) throws ExpectationFailedException {
         for (QueryCriteria criteria : criterion) {
             if (!(criteria.getField().equals("certificateName")
