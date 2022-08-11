@@ -12,24 +12,27 @@ import java.util.stream.Collectors;
 @Component
 public class TagBuilder {
 
-    public TagBuilder() {
+    public List<Tag> build(@Valid GiftCertificateDto giftCertificateDto) {
+        return giftCertificateDto
+                .getTags()
+                .stream()
+                .map(this::build)
+                .collect(Collectors.toList());
     }
 
-    public List<Tag> build(@Valid GiftCertificateDto dto) {
-        return dto.getTags().stream().map(this::build).collect(Collectors.toList());
-    }
-
-    public Tag build(@Valid TagDto dto) {
-        Tag tag = new Tag();
-        tag.setName(dto.getName());
-        tag.setId(dto.getId());
-        return tag;
+    public Tag build(@Valid TagDto tagDto) {
+        return Tag
+                .builder()
+                .id(tagDto.getId())
+                .name(tagDto.getName())
+                .build();
     }
 
     public TagDto build(Tag tag) {
-        TagDto dto = new TagDto();
-        dto.setName(tag.getName());
-        dto.setId(tag.getId());
-        return dto;
+        return TagDto
+                .builder()
+                .id(tag.getId())
+                .name(tag.getName())
+                .build();
     }
 }
