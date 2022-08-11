@@ -1,12 +1,16 @@
-## Gift Certificates with Tags
+## REST API Advanced
 
-Web service for Gift Certificates system that expose REST APIs to perform the following operations:
+Web service for Gift Certificates with Orders system that expose REST APIs to perform the following operations:
 * CRUD operations for GiftCertificate. If new tags are passed during creation/modification – they should be created in the DB. For update operation - update only fields, that pass in request, others should not be updated. Batch insert is out of scope.
 * CRD operations for Tag.
+  * Get the most widely used tag of a user with the highest cost of all orders
 * Get certificates with tags (all params are optional and can be used in conjunction):
-  * by tag name (ONE tag)
-  * search by part of name/description (can be implemented, using DB function call)\
+  * by tag name (several tags)
+  * search by part of name/description (can be implemented, using DB function call)
   * sort by date or by name ASC/DESC (extra task: implement ability to apply both sort type at the same time).
+* Read operations for User.  
+* Create and Read operations for Order.
+This application support HATEOAS on REST endpoints. Pagination is implemented for all GET endpoints
 
 All exceptions are meaningful and localized on backend side. Exception code meaning:
 * **40000** - invalid parameters/parameter values in json
