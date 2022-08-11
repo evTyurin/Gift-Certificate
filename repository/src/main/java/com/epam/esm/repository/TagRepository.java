@@ -1,4 +1,4 @@
-package com.epam.esm.dao;
+package com.epam.esm.repository;
 
 import com.epam.esm.entity.Tag;
 
@@ -9,14 +9,18 @@ import java.util.Optional;
  * The interface provides methods to work with tags information
  * in a data source.
  */
-public interface TagDAO {
+public interface TagRepository {
+
+    List<Tag> findMostWidelyUsedTag();
 
     /**
      * Find list of all tags
      *
+     * @param pageNumber        the number of page being viewed
+     * @param pageElementAmount amount of elements per page
      * @return the list of tags
      */
-    List<Tag> findAll();
+    List<Tag> findAll(int pageNumber, int pageElementAmount);
 
     /**
      * Find tag by id
@@ -46,5 +50,12 @@ public interface TagDAO {
      *
      * @param id the tag id
      */
-    void deleteById(int id);
+    void delete(int id);
+
+    /**
+     * Get amount of all tags in database
+     *
+     * @return number of all tags in database
+     */
+    int findAmount();
 }
