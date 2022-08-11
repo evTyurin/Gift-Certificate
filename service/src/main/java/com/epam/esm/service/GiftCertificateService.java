@@ -1,9 +1,11 @@
 package com.epam.esm.service;
 
+import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.QueryCriteria;
 import com.epam.esm.exception.EntityExistException;
 import com.epam.esm.exception.NotFoundException;
-import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.exception.PageElementAmountException;
+import com.epam.esm.exception.PageNumberException;
 
 import java.util.List;
 
@@ -36,7 +38,20 @@ public interface GiftCertificateService {
      * @throws EntityExistException indicates that tag with name for update already exist
      * @throws NotFoundException    indicates that gift certificate with this id not exist
      */
-    void update(int id, GiftCertificate giftCertificate) throws EntityExistException, NotFoundException;
+    void update(int id,
+                GiftCertificate giftCertificate) throws EntityExistException, NotFoundException;
+
+    /**
+     * Partial update exist GiftCertificate
+     *
+     * @param id              the gift certificate id
+     * @param giftCertificate the gift certificate entity
+     * @throws EntityExistException indicates that tag with name for update already exist
+     * @throws NotFoundException    indicates that gift certificate with this id not exist
+     */
+    void partialUpdate(int id,
+                       GiftCertificate giftCertificate) throws EntityExistException,
+            NotFoundException;
 
     /**
      * Find GiftCertificate by id
@@ -50,9 +65,28 @@ public interface GiftCertificateService {
     /**
      * Find GiftCertificates by criteria
      *
-     * @param searchQueryCriteria criterion to create search query
-     * @param orderQueryCriteria  criterion to create order by query
+     * @param searchQueryCriteria criterion used for search
+     * @param orderQueryCriteria  criterion used for search
+     * @param pageNumber          the number of page being viewed
+     * @param pageElementAmount   amount of elements per page
      * @return list of gift certificates found and ordered by criterion
+     * @throws PageElementAmountException indicates that amount of elements per page
+     *                                    are incorrect (less then 1 or bigger then 100)
+     * @throws PageNumberException        indicates that number of page being viewed bigger then amount of pages
+     *                                    found by criterion or less then 1
      */
-    List<GiftCertificate> find(List<QueryCriteria> searchQueryCriteria, List<QueryCriteria> orderQueryCriteria);
+    List<GiftCertificate> find(List<QueryCriteria> searchQueryCriteria,
+                               List<QueryCriteria> orderQueryCriteria,
+                               int pageNumber,
+                               int pageElementAmount) throws
+            PageElementAmountException,
+            PageNumberException;
+
+    /**
+     * @param searchQueryCriteria criterion used for search
+     * @param orderQueryCriteria  criterion used for sort
+     * @return amount of instances that match search parameters
+     */
+    int countByCriterion(List<QueryCriteria> searchQueryCriteria,
+                         List<QueryCriteria> orderQueryCriteria);
 }
