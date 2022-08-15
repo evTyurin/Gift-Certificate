@@ -5,6 +5,9 @@ import com.epam.esm.entity.QueryCriteria;
 
 import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.repository.util.CriteriaInfo;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -19,6 +22,7 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -100,11 +104,36 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         entityManager.merge(giftCertificate);
     }
 
+    @Override
+    public List<Number> getRevisionNumbers(int id) {
+        AuditReader reader = AuditReaderFactory.get(entityManager);
+        return reader.getRevisions(GiftCertificate.class, id);
+    }
+
+    @Override
+    public int getRevisionsAmount(int certificateId,
+                                  LocalDateTime certificateUpdateDate,
+                                  LocalDateTime orderDate) {
+        return getAuditReader().createQuery()
+                .forRevisionsOfEntity(GiftCertificate.class, true, true)
+                .add(AuditEntity.property("id").eq(certificateId))
+                .add(AuditEntity.property("lastUpdateDate").gt(certificateUpdateDate))
+                .add(AuditEntity.property("lastUpdateDate").lt(orderDate))
+                .getResultList()
+                .size();
+    }
+
+    @Override
+    public GiftCertificate findByRevisionNumber(int id, Number revisionNumber) {
+        AuditReader reader = AuditReaderFactory.get(entityManager);
+        return reader.find(GiftCertificate.class, id, revisionNumber);
+    }
+
     private List<Predicate> getPredicates(CriteriaBuilder criteriaBuilder,
                                           List<QueryCriteria> searchQueryCriteria,
                                           Root<GiftCertificate> root) {
         List<Predicate> predicates = new ArrayList<>();
-        for (QueryCriteria queryCriteria:searchQueryCriteria) {
+        for (QueryCriteria queryCriteria : searchQueryCriteria) {
             if (queryCriteria.getField().equals("tagName")) {
                 predicates.add(criteriaBuilder.equal(root
                         .join("tags").get("name"), queryCriteria.getValue()));
@@ -121,7 +150,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                                   List<QueryCriteria> orderQueryCriteria,
                                   Root<GiftCertificate> root) {
         List<Order> orders = new ArrayList<>();
-        for (QueryCriteria queryCriteria:orderQueryCriteria) {
+        for (QueryCriteria queryCriteria : orderQueryCriteria) {
             if (queryCriteria.getValue().equals("asc")) {
                 orders.add(criteriaBuilder.asc(root.get(CriteriaInfo
                         .getEntityFieldName(queryCriteria.getField()))));
@@ -143,5 +172,9 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         criteriaQuery.where(predicates.toArray(new Predicate[]{}));
         criteriaQuery.orderBy(orders);
         criteriaQuery.distinct(true);
+    }
+
+    public AuditReader getAuditReader() {
+        return AuditReaderFactory.get(entityManager);
     }
 }

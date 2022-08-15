@@ -1,11 +1,13 @@
 package com.epam.esm.controller.util;
 
 import com.epam.esm.entity.QueryCriteria;
+import com.epam.esm.exception.ExpectationFailedException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The query criteria builder used for building queries for searching and sorting
@@ -19,17 +21,24 @@ public class UtilQueryCriteriaBuilder {
      *
      * @param criteria criteria used for sort
      * @return list of query criterion used for sort
+     * @throws ExpectationFailedException indicates that criterion spelling is incorrect
      */
-    public List<QueryCriteria> createSortOrder(String criteria) {
+    public List<QueryCriteria> createSortOrder(String criteria) throws ExpectationFailedException {
         List<QueryCriteria> queryCriterion = new ArrayList<>();
+        int separatorPosition;
         if (criteria != null) {
-            Arrays.stream(criteria.split(","))
-                    .forEach(criteriaValue ->
-                            queryCriterion.add(new QueryCriteria(
-                                    criteriaValue.substring(0, criteriaValue.indexOf("-")),
-                                    criteriaValue.substring(criteriaValue.indexOf("-") + 1))
-                            )
+            List<String> sortCriterion = Arrays.stream(criteria.split(",")).collect(Collectors.toList());
+            for (String sortCriteria : sortCriterion) {
+                separatorPosition = sortCriteria.indexOf("-");
+                if (separatorPosition > 0) {
+                    queryCriterion.add(new QueryCriteria(
+                            sortCriteria.substring(0, separatorPosition),
+                            sortCriteria.substring(separatorPosition + 1))
                     );
+                } else {
+                    throw new ExpectationFailedException(40017);
+                }
+            }
         }
         return queryCriterion;
     }

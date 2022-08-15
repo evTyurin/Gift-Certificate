@@ -57,7 +57,7 @@ public class OrderController {
      * @throws NotFoundException indicates that order with this id not exist
      */
     @GetMapping("{id}")
-    public OrderDto find(@PathVariable int id) throws NotFoundException {
+    public OrderDto find(@PathVariable int id) throws NotFoundException, EntityExistException {
         return hateoasEntity.addOrderLinks(orderBuilder.build(orderService.find(id)));
     }
 
@@ -83,11 +83,8 @@ public class OrderController {
             EntityExistException {
         List<Order> orders = orderService.findAll(page, size);
         List<OrderDto> ordersDto = new ArrayList<>();
-        OrderDto orderDto;
-        for (Order order : orders) {
-            orderDto = orderBuilder.build(order);
-            hateoasEntity.addUserLinks(orderDto.getUser());
-            ordersDto.add(hateoasEntity.addOrderLinks(orderDto));
+        for (Order order:orders) {
+            ordersDto.add(hateoasEntity.addOrderLinks(orderBuilder.build(order)));
         }
         List<Link> links = paginationHateoas.addPaginationOrderLinks(
                 size,

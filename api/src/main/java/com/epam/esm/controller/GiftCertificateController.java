@@ -123,10 +123,11 @@ public class GiftCertificateController {
      *
      * @param id the gift certificate id
      * @return the gift certificate dto
-     * @throws NotFoundException indicates that gift certificate with this id not exist
+     * @throws NotFoundException    indicates that gift certificate with this id not exist
+     * @throws EntityExistException indicates that gift certificate with this name already exist
      */
     @GetMapping("{id}")
-    public GiftCertificateDto find(@PathVariable int id) throws NotFoundException {
+    public GiftCertificateDto find(@PathVariable int id) throws NotFoundException, EntityExistException {
         return hateoasEntity.addGiftCertificateLinks(giftCertificateBuilder.build(giftCertificateService.find(id)));
     }
 
@@ -151,8 +152,9 @@ public class GiftCertificateController {
      * @throws NotFoundException    indicates that gift certificate with this id not exist
      */
     @PutMapping("{id}")
-    public void update(@PathVariable int id, @Valid @RequestBody GiftCertificateDto giftCertificateDto) throws EntityExistException, NotFoundException {
+    public ResponseEntity<Void> update(@PathVariable int id, @Valid @RequestBody GiftCertificateDto giftCertificateDto) throws EntityExistException, NotFoundException {
         giftCertificateService.update(id, giftCertificateBuilder.build(giftCertificateDto));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -164,8 +166,9 @@ public class GiftCertificateController {
      * @throws NotFoundException    indicates that gift certificate with this id not exist
      */
     @PatchMapping("{id}")
-    public void partialUpdate(@PathVariable int id, @Validated(Patchable.class) @RequestBody GiftCertificateDto giftCertificateDto) throws EntityExistException, NotFoundException {
+    public ResponseEntity<Void> partialUpdate(@PathVariable int id, @Validated(Patchable.class) @RequestBody GiftCertificateDto giftCertificateDto) throws EntityExistException, NotFoundException {
         giftCertificateService.partialUpdate(id, giftCertificateBuilder.build(giftCertificateDto));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**

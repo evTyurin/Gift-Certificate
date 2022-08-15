@@ -33,22 +33,24 @@ public class GiftCertificateDto extends RepresentationModel<GiftCertificateDto> 
     private int id;
     @NotBlank(message = "blank.field.message", groups = Postable.class)
     @Size(min = 3, max = 50, message = "name.certificate.size.message", groups = {Patchable.class, Postable.class})
+    @NotNull(message = "null.field.message", groups = Postable.class)
     private String name;
     @NotBlank(message = "blank.field.message", groups = Postable.class)
-    @Size(min = 10, max = 1000, message = "description.size.message")
+    @Size(min = 10, max = 1000, message = "description.size.message", groups = {Patchable.class, Postable.class})
+    @NotNull(message = "null.field.message", groups = Postable.class)
     private String description;
-    @Min(value = 0, message = "not.positive.price.message")
-    @Max(value = 10000, message = "not.positive.price.message")
-    @NotNull(message = "blank.field.message", groups = Postable.class)
+    @Min(value = 0, message = "not.positive.price.message", groups = {Patchable.class, Postable.class})
+    @Max(value = 10000, message = "not.positive.price.message", groups = {Patchable.class, Postable.class})
+    @NotNull(message = "null.field.message", groups = Postable.class)
     private Double price;
-    @Min(value = 0, message = "not.positive.price.message")
-    @Max(value = 10000, message = "not.positive.price.message")
-    @NotNull(message = "blank.field.message", groups = Postable.class)
+    @Min(value = 0, message = "not.positive.duration.message", groups = {Patchable.class, Postable.class})
+    @Max(value = 10000, message = "not.positive.duration.message", groups = {Patchable.class, Postable.class})
+    @NotNull(message = "null.field.message", groups = Postable.class)
     private Integer duration;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @NotNull(message = "blank.field.message", groups = Postable.class)
+    @NotNull(message = "null.field.message", groups = Postable.class)
     private LocalDateTime createDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)

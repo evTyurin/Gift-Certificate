@@ -50,11 +50,11 @@ public class PaginationHateoas {
         int pagesAmount = getPagesAmount(elementsAmount, size);
         links.add(linkTo(methodOn(TagController.class)
                 .findAll(1, size))
-                .withRel(HateoasConstants.FIRST_PAGE));
+                .withRel(HateoasConstants.FIRST));
         if (hasPreviousPage(page)) {
             links.add(linkTo(methodOn(TagController.class)
                     .findAll(page - 1, size))
-                    .withRel(HateoasConstants.PREVIOUS_PAGE));
+                    .withRel(HateoasConstants.PREVIOUS));
         }
         links.add(linkTo(methodOn(TagController.class)
                 .findAll(page, size))
@@ -62,11 +62,11 @@ public class PaginationHateoas {
         if (hasNextPage(page, pagesAmount)) {
             links.add(linkTo(methodOn(TagController.class)
                     .findAll(page + 1, size))
-                    .withRel(HateoasConstants.NEXT_PAGE));
+                    .withRel(HateoasConstants.NEXT));
         }
         links.add(linkTo(methodOn(TagController.class)
                 .findAll(pagesAmount, size))
-                .withRel(HateoasConstants.LAST_PAGE));
+                .withRel(HateoasConstants.LAST));
         return links;
     }
 
@@ -110,7 +110,7 @@ public class PaginationHateoas {
                         description,
                         1,
                         size))
-                .withRel(HateoasConstants.FIRST_PAGE)
+                .withRel(HateoasConstants.FIRST)
                 .expand());
 
         if (hasPreviousPage(page)) {
@@ -121,7 +121,7 @@ public class PaginationHateoas {
                             description,
                             page - 1,
                             size))
-                    .withRel(HateoasConstants.PREVIOUS_PAGE)
+                    .withRel(HateoasConstants.PREVIOUS)
                     .expand());
         }
         links.add(linkTo(methodOn(GiftCertificateController.class)
@@ -141,7 +141,7 @@ public class PaginationHateoas {
                             description,
                             page + 1,
                             size))
-                    .withRel(HateoasConstants.NEXT_PAGE)
+                    .withRel(HateoasConstants.NEXT)
                     .expand());
         }
         links.add(linkTo(methodOn(GiftCertificateController.class)
@@ -151,7 +151,7 @@ public class PaginationHateoas {
                         description,
                         pagesAmount,
                         size))
-                .withRel(HateoasConstants.LAST_PAGE)
+                .withRel(HateoasConstants.LAST)
                 .expand());
         return links;
     }
@@ -181,11 +181,11 @@ public class PaginationHateoas {
         int pagesAmount = getPagesAmount(elementsAmount, size);
         links.add(linkTo(methodOn(OrderController.class)
                 .findAll(1, size))
-                .withRel(HateoasConstants.FIRST_PAGE));
+                .withRel(HateoasConstants.FIRST));
         if (hasPreviousPage(page)) {
             links.add(linkTo(methodOn(OrderController.class)
                     .findAll(page - 1, size))
-                    .withRel(HateoasConstants.PREVIOUS_PAGE));
+                    .withRel(HateoasConstants.PREVIOUS));
         }
         links.add(linkTo(methodOn(OrderController.class)
                 .findAll(page, size))
@@ -193,11 +193,11 @@ public class PaginationHateoas {
         if (hasNextPage(page, pagesAmount)) {
             links.add(linkTo(methodOn(OrderController.class)
                     .findAll(page + 1, size))
-                    .withRel(HateoasConstants.NEXT_PAGE));
+                    .withRel(HateoasConstants.NEXT));
         }
         links.add(linkTo(methodOn(OrderController.class)
                 .findAll(pagesAmount, size))
-                .withRel(HateoasConstants.LAST_PAGE));
+                .withRel(HateoasConstants.LAST));
         return links;
     }
 
@@ -226,11 +226,11 @@ public class PaginationHateoas {
         int pagesAmount = getPagesAmount(elementsAmount, size);
         links.add(linkTo(methodOn(UserController.class)
                 .findAll(1, size))
-                .withRel(HateoasConstants.FIRST_PAGE));
+                .withRel(HateoasConstants.FIRST));
         if (hasPreviousPage(page)) {
             links.add(linkTo(methodOn(UserController.class)
                     .findAll(page - 1, size))
-                    .withRel(HateoasConstants.PREVIOUS_PAGE));
+                    .withRel(HateoasConstants.PREVIOUS));
         }
         links.add(linkTo(methodOn(UserController.class)
                 .findAll(page, size))
@@ -238,11 +238,11 @@ public class PaginationHateoas {
         if (hasNextPage(page, pagesAmount)) {
             links.add(linkTo(methodOn(UserController.class)
                     .findAll(page + 1, size))
-                    .withRel(HateoasConstants.NEXT_PAGE));
+                    .withRel(HateoasConstants.NEXT));
         }
         links.add(linkTo(methodOn(UserController.class)
                 .findAll(pagesAmount, size))
-                .withRel(HateoasConstants.LAST_PAGE));
+                .withRel(HateoasConstants.LAST));
         return links;
     }
 

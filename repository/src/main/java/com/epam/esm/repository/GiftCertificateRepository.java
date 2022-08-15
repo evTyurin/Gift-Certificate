@@ -3,6 +3,7 @@ package com.epam.esm.repository;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.QueryCriteria;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,4 +73,34 @@ public interface GiftCertificateRepository {
      */
     int countByCriterion(List<QueryCriteria> searchQueryCriteria,
                          List<QueryCriteria> orderQueryCriteria);
+
+    /**
+     * Get revision numbers of gift certificate by id
+     *
+     * @param id the gift certificate id
+     * @return list of gift certificate revisions
+     */
+    List<Number> getRevisionNumbers(int id);
+
+    /**
+     * Get gift certificate by id and revision number
+     *
+     * @param id             the gift certificate id
+     * @param revisionNumber the gift certificate revision number
+     * @return gift certificate
+     */
+    GiftCertificate findByRevisionNumber(int id, Number revisionNumber);
+
+    /**
+     * Get amount of revisions between date of gift certificate update
+     * and date of order creation
+     *
+     * @param certificateId         the gift certificate id
+     * @param certificateUpdateDate the date of gift certificate update
+     * @param orderDate             the date of order creation
+     * @return number of gift certificate revisions
+     */
+    int getRevisionsAmount(int certificateId,
+                           LocalDateTime certificateUpdateDate,
+                           LocalDateTime orderDate);
 }

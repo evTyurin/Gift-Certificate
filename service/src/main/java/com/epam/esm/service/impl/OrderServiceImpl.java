@@ -47,11 +47,16 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findAmount();
     }
 
+    @Transactional
     @Override
     public Order find(int id) throws NotFoundException {
-        return orderRepository.find(id)
+        Order order = orderRepository.find(id)
                 .orElseThrow(()
                         -> new NotFoundException(id, ExceptionCode.NOT_FOUND_EXCEPTION));
+        order.getCertificates().forEach(giftCertificate ->
+                findGiftCertificateVersion(giftCertificate, order.getPurchaseDate())
+        );
+        return order;
     }
 
     @Transactional
@@ -76,11 +81,34 @@ public class OrderServiceImpl implements OrderService {
                 .build());
     }
 
+    @Transactional
     @Override
     public List<Order> findAll(int page, int size) throws PageElementAmountException, PageNumberException {
         validation.pageElementAmountValidation(size);
         int ordersAmount = orderRepository.findAmount();
         validation.pageAmountValidation(ordersAmount, size, page);
-        return orderRepository.findAll(page, size);
+        List<Order> orders = orderRepository.findAll(page, size);
+        orders.forEach(order ->
+                order.getCertificates().forEach(giftCertificate ->
+                        findGiftCertificateVersion(giftCertificate, order.getPurchaseDate())
+                )
+        );
+        return orders;
+    }
+
+    private void findGiftCertificateVersion(GiftCertificate giftCertificate, LocalDateTime orderPurchaseDate) {
+        GiftCertificate giftCertificateVersion = giftCertificateRepository.getRevisionNumbers(giftCertificate.getId())
+                .stream()
+                .map(versionNumber -> giftCertificateRepository
+                        .findByRevisionNumber(giftCertificate.getId(), versionNumber))
+                .filter(certificate -> certificate.getLastUpdateDate()
+                        .isBefore(orderPurchaseDate) && giftCertificateRepository
+                        .getRevisionsAmount(giftCertificate.getId(),
+                                certificate.getLastUpdateDate(),
+                                orderPurchaseDate) == 0)
+                .findAny()
+                .orElse(giftCertificate);
+        giftCertificate.setPrice(giftCertificateVersion.getPrice());
+        giftCertificate.setLastUpdateDate(giftCertificateVersion.getLastUpdateDate());
     }
 }

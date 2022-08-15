@@ -119,7 +119,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             throw new EntityExistException(giftCertificate.getId(), ExceptionCode.ENTITY_EXIST_EXCEPTION);
         }
         giftCertificate.setCreateDate(LocalDateTime.now());
-        giftCertificate.setLastUpdateDate(LocalDateTime.now());
+        giftCertificate.setLastUpdateDate(giftCertificate.getCreateDate());
         List<Tag> tags = addIdToExistTags(giftCertificate.getTags());
         giftCertificate.setTags(tags);
         giftCertificateRepository.create(giftCertificate);

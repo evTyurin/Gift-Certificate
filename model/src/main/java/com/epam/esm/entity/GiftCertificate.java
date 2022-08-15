@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -38,6 +39,7 @@ public class GiftCertificate implements Serializable {
     private int id;
     private String name;
     private String description;
+    @Audited
     private Double price;
     private Integer duration;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -47,6 +49,7 @@ public class GiftCertificate implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @Audited
     private LocalDateTime lastUpdateDate;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "gift_certificate_has_tag",
@@ -62,7 +65,6 @@ public class GiftCertificate implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "order_id")
     )
     private List<Order> orders;
-
 
     @Override
     public String toString() {

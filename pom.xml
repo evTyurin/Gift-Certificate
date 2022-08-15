@@ -25,11 +25,18 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring.boot.starter.parent.version>2.6.7</spring.boot.starter.parent.version>
         <lombok.version>1.18.24</lombok.version>
+        <hibernate.version>5.6.0.Final</hibernate.version>
 
         <start-class>com.epam.esm.configuration.WebAppInitializer</start-class>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-envers</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
