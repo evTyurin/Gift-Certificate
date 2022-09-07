@@ -1,5 +1,6 @@
 package com.epam.esm.repository.impl;
 
+import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
 import com.epam.esm.repository.UserRepository;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> find(String login) {
+        return Optional.ofNullable(entityManager.find(User.class, login));
+    }
+
+    @Override
     public List<User> findAll(int pageNumber, int pageElementAmount) {
         final String READ_ALL_USERS = "SELECT user FROM User user";
         TypedQuery<User> query = entityManager.createQuery(READ_ALL_USERS, User.class);
@@ -39,5 +45,10 @@ public class UserRepositoryImpl implements UserRepository {
     public int findAmount() {
         TypedQuery<Long> countQuery = entityManager.createQuery("SELECT COUNT(user) FROM User user", Long.class);
         return (int) (double) countQuery.getSingleResult();
+    }
+
+    @Override
+    public void create(User user) {
+        entityManager.persist(user);
     }
 }

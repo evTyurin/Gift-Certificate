@@ -39,4 +39,10 @@ public interface UserService {
      * @return number of all tags in database
      */
     int findAmount();
+
+    void create(User user);
+
+    User findByLoginAndPassword(String login, String password) throws NotFoundException;
+
+    User findByLogin(String login) throws NotFoundException;
 }

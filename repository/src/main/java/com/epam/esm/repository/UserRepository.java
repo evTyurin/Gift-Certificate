@@ -30,4 +30,8 @@ public interface UserRepository {
      * @return number of all tags in database
      */
     int findAmount();
+
+    Optional<User> find(String login);
+
+    void create(User user);
 }

@@ -26,6 +26,7 @@
         <spring.boot.starter.parent.version>2.6.7</spring.boot.starter.parent.version>
         <lombok.version>1.18.24</lombok.version>
         <hibernate.version>5.6.0.Final</hibernate.version>
+        <JSON.web.token.version>0.9.1</JSON.web.token.version>
 
         <start-class>com.epam.esm.configuration.WebAppInitializer</start-class>
     </properties>
@@ -60,6 +61,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${JSON.web.token.version}</version>
         </dependency>
 
         <dependency>
