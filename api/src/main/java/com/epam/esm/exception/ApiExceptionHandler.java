@@ -155,4 +155,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 null, LocaleContextHolder.getLocale()), 40015),
                 HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = NotFoundLoginException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseException> handleNotFoundLoginException(NotFoundLoginException exception) {
+        return new ResponseEntity<>(new ResponseException(messageSource.getMessage("not.found.login.message",
+                new Object[]{exception.getLogin()}, LocaleContextHolder.getLocale()),
+                exception.getExceptionCode()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = JwtAuthenticationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseException> handleJwtAuthenticationException(JwtAuthenticationException exception) {
+        return new ResponseEntity<>(new ResponseException(messageSource.getMessage(exception.getMessage(),
+                null, LocaleContextHolder.getLocale()),
+                exception.getExceptionCode()), HttpStatus.BAD_REQUEST);
+    }
 }

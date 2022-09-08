@@ -1,12 +1,14 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.builder.GiftCertificateBuilder;
 import com.epam.esm.builder.UserBuilder;
 import com.epam.esm.dto.UserDto;
-import com.epam.esm.entity.AuthenticationRequest;
-import com.epam.esm.entity.AuthenticationResponse;
+import com.epam.esm.entity.security.AuthenticationRequest;
+import com.epam.esm.entity.security.AuthenticationResponse;
 import com.epam.esm.entity.User;
+import com.epam.esm.exception.EntityExistException;
+import com.epam.esm.exception.ExpectationFailedException;
 import com.epam.esm.exception.NotFoundException;
+import com.epam.esm.exception.NotFoundLoginException;
 import com.epam.esm.security.JwtProvider;
 import com.epam.esm.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -33,19 +35,19 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Void> signUpUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<Void> signUpUser(@RequestBody UserDto userDto) throws ExpectationFailedException, NotFoundLoginException, EntityExistException {
         userService.create(userBuilder.build(userDto));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<AuthenticationResponse> signIn(@RequestBody AuthenticationRequest authenticationRequest) throws NotFoundException {
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> signIn(@RequestBody AuthenticationRequest authenticationRequest) throws NotFoundException, NotFoundLoginException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authenticationRequest.getLogin(),
                 authenticationRequest.getPassword())
         );
-        User user = userService.findByLoginAndPassword(authenticationRequest.getLogin(), authenticationRequest.getPassword());
-       String token = jwtProvider.createToken(user.getLogin(), user.getRoles());
+        User user = userService.find(authenticationRequest.getLogin(), authenticationRequest.getPassword());
+        String token = jwtProvider.createToken(user.getLogin(), user.getRoles());
         return new ResponseEntity<>(new AuthenticationResponse(token), HttpStatus.OK);
     }
 

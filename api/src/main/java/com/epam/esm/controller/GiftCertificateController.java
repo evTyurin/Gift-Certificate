@@ -127,7 +127,7 @@ public class GiftCertificateController {
      * @throws EntityExistException indicates that gift certificate with this name already exist
      */
     @GetMapping("{id}")
-    public GiftCertificateDto find(@PathVariable int id) throws NotFoundException, EntityExistException {
+    public GiftCertificateDto find(@PathVariable int id) throws NotFoundException {
         return hateoasEntity.addGiftCertificateLinks(giftCertificateBuilder.build(giftCertificateService.find(id)));
     }
 

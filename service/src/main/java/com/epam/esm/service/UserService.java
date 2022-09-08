@@ -1,9 +1,13 @@
 package com.epam.esm.service;
 
 import com.epam.esm.entity.User;
+import com.epam.esm.exception.EntityExistException;
+import com.epam.esm.exception.ExpectationFailedException;
 import com.epam.esm.exception.NotFoundException;
+import com.epam.esm.exception.NotFoundLoginException;
 import com.epam.esm.exception.PageElementAmountException;
 import com.epam.esm.exception.PageNumberException;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -40,9 +44,11 @@ public interface UserService {
      */
     int findAmount();
 
-    void create(User user);
+    void create(User user) throws ExpectationFailedException, NotFoundLoginException, EntityExistException;
 
-    User findByLoginAndPassword(String login, String password) throws NotFoundException;
+    User find(String login, String password) throws NotFoundException, NotFoundLoginException;
 
-    User findByLogin(String login) throws NotFoundException;
+    User find(String login) throws NotFoundException, NotFoundLoginException;
+
+    UserDetails map(User user);
 }

@@ -1,19 +1,28 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.entity.Role;
 import com.epam.esm.entity.User;
+import com.epam.esm.exception.EntityExistException;
+import com.epam.esm.exception.ExpectationFailedException;
 import com.epam.esm.exception.NotFoundException;
+import com.epam.esm.exception.NotFoundLoginException;
 import com.epam.esm.exception.PageElementAmountException;
 import com.epam.esm.exception.PageNumberException;
 import com.epam.esm.repository.UserRepository;
+import com.epam.esm.entity.security.JwtUser;
 import com.epam.esm.service.UserService;
 import com.epam.esm.service.constants.ExceptionCode;
 import com.epam.esm.service.util.Validation;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class implements UserService interface
@@ -26,8 +35,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final Validation validation;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public int findAmount() {
@@ -50,8 +58,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByLoginAndPassword(String login, String password) throws NotFoundException {
-        User userEntity = findByLogin(login);
+    public User find(String login, String password) throws NotFoundLoginException {
+        User userEntity = find(login);
         if (userEntity != null && passwordEncoder.matches(password, userEntity.getPassword())) {
                 return userEntity;
         }
@@ -59,17 +67,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByLogin(String login) throws NotFoundException {
+    public User find(String login) throws NotFoundLoginException {
         return userRepository.find(login).orElseThrow(()
-                -> new NotFoundException(1111, ExceptionCode.NOT_FOUND_EXCEPTION));
+                -> new NotFoundLoginException(login, ExceptionCode.NOT_FOUND_EXCEPTION));
     }
 
     @Override
-    public void create(User user) {
-        if (user.getLogin().isEmpty() || user.getPassword().isEmpty()) {
-            // exception
+    public void create(User user) throws ExpectationFailedException, NotFoundLoginException, EntityExistException {
+        if(user.getLogin().isEmpty() || user.getPassword().isEmpty()) {
+            throw new ExpectationFailedException(40000);
         }
-        //TODO check
+        User existUser = find(user.getLogin());
+        if(existUser != null) {
+            throw new EntityExistException(existUser.getId(), ExceptionCode.ENTITY_EXIST_EXCEPTION);
+        }
         userRepository.create(user);
+    }
+
+    @Override
+    public UserDetails map(User user) {
+        return new JwtUser(
+                user.getId(),
+                user.getName(),
+                user.getPassword(),
+                map(user.getRoles())
+        );
+    }
+
+    private Collection<? extends GrantedAuthority> map(List<Role> userRole) {
+        return userRole
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList());
     }
 }

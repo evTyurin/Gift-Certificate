@@ -1,4 +1,4 @@
-package com.epam.esm.security;
+package com.epam.esm.entity.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

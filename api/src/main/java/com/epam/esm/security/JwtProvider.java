@@ -1,14 +1,18 @@
 package com.epam.esm.security;
 
 import com.epam.esm.entity.Role;
+import com.epam.esm.exception.JwtAuthenticationException;
+import com.epam.esm.exception.NotFoundException;
+import com.epam.esm.exception.NotFoundLoginException;
+import com.epam.esm.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.ExpiredJwtException;
 import java.time.LocalDateTime;
@@ -18,11 +22,11 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Component
+@RequiredArgsConstructor
 public class JwtProvider {
 
     @Value("${jwt.secret}")
@@ -30,8 +34,7 @@ public class JwtProvider {
     @Value("${jwt.expiration.time}")
     private int jwtExpirationTime;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserService userService;
 
     @PostConstruct
     protected void init() {
@@ -59,40 +62,36 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String getLoginFromToken(String token) {
-        Claims claims = Jwts
-                .parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
-    }
-
-    public Authentication getAuthentication(String token) {
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
+    public Authentication getAuthentication(String token) throws NotFoundException, NotFoundLoginException {
+        UserDetails userDetails = userService.map(userService.find(findLogin(token)));
+        return new UsernamePasswordAuthenticationToken(
+                userDetails,
+                userDetails.getPassword(),
                 userDetails.getAuthorities());
     }
 
-    public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    public String findLogin(String token) {
+        return Jwts
+                .parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
-    //TODO
     public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException ex) {
-            //Invalid JWT token
+            throw new JwtAuthenticationException("invalid.jwt.token", 40101);
         } catch (ExpiredJwtException ex) {
-            //Expired JWT token
+            throw new JwtAuthenticationException("expired.jwt.token", 40102);
         } catch (UnsupportedJwtException ex) {
-            //Unsupported JWT token
+            throw new JwtAuthenticationException("unsupported.jwt.token", 40103);
         } catch (IllegalArgumentException ex) {
-            //JWT claims string is empty
+            throw new JwtAuthenticationException("invalid.claims", 40104);
         }
-        return false;
     }
 
     public String getTokenFromRequest(HttpServletRequest request) {
