@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -31,6 +32,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/certificates").permitAll()
                 .antMatchers("/certificates/{id}").permitAll()
+                .antMatchers(HttpMethod.GET, "/users/**").hasAnyAuthority("user","admin")
+                .antMatchers(HttpMethod.GET, "/orders/**").hasAnyAuthority("user","admin")
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
