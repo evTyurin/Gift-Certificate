@@ -29,10 +29,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
-    @Value("${jwt.expiration.time}")
-    private int jwtExpirationTime;
+//    @Value("${jwt.secret}")
+    private String jwtSecret = "secret";
+//    @Value("${jwt.expiration.time}")
+    private int jwtExpirationTime = 30;
 
     private final UserService userService;
 

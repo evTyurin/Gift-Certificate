@@ -18,6 +18,7 @@
         <module>repository</module>
         <module>service</module>
         <module>api</module>
+        <module>oauth-authorization-server</module>
     </modules>
 
     <properties>
@@ -25,7 +26,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring.boot.starter.parent.version>2.6.7</spring.boot.starter.parent.version>
         <lombok.version>1.18.24</lombok.version>
-        <hibernate.version>5.6.0.Final</hibernate.version>
+        <hibernate.version>5.6.3.Final</hibernate.version>
         <JSON.web.token.version>0.9.1</JSON.web.token.version>
 
         <start-class>com.epam.esm.configuration.WebAppInitializer</start-class>
@@ -35,7 +36,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-envers</artifactId>
-            <version>${hibernate.version}</version>
+            <version>5.6.3.Final</version>
         </dependency>
 
         <dependency>
@@ -74,11 +75,24 @@
             <version>${JSON.web.token.version}</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.auth0</groupId>-->
+<!--            <artifactId>java-jwt</artifactId>-->
+<!--            <version>3.19.2</version>-->
+<!--        </dependency>-->
+
         <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>3.19.2</version>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>2.5.2.RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-authorization-server</artifactId>
+            <version>0.3.1</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>

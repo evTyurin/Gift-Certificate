@@ -1,0 +1,45 @@
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/gift-certificate-order-security
+    username: root
+    password: ETmysql21@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  security:
+    oauth2:
+      client:
+        registration:
+          my-application-oidc:
+            provider: spring
+            client-id: client_id
+            client-secret: client_secret
+            authorization-grant-type: authorization_code
+            scope: openid
+            client-name: my-application-oidc
+        provider:
+          spring:
+            issuer-uri: http://localhost:9000
+
+
+
+                #spring.datasource.url=jdbc:mysql://localhost:3306/gift-certificate-order-security
+                #spring.datasource.username=root
+                #spring.datasource.password=ETmysql21@
+                #spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+                #server.port=8080
+                #spring.profiles.active=prod
+                #spring.jpa.hibernate.ddl-auto=update
+                #spring.jpa.show-sql=true
+                #spring.web.locale=en
+                #jwt.header=Authorization
+                #jwt.secret=jwtsecret
+                #jwt.expiration.time=30
+                #allow-bean-definition-overriding=true
+
+
+
+
