@@ -99,8 +99,8 @@ public class OrderController {
      * @param order the purchase order dto
      * @throws NotFoundException indicates that order with this id not exist
      */
-    @PostMapping
-    public void create(@Valid @RequestBody PurchaseOrderDto order) throws NotFoundException {
-        orderService.create(order.getUserId(), order.getGiftCertificateIds());
-    }
+//    @PostMapping
+//    public void create(@Valid @RequestBody PurchaseOrderDto order) throws NotFoundException {
+//        orderService.create(order.getUserId(), order.getGiftCertificateIds());
+//    }
 }

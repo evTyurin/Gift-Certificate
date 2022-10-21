@@ -51,10 +51,10 @@ public class UserController {
      * @return the user dto
      * @throws NotFoundException indicates that user with this id not exist
      */
-    @GetMapping("{id}")
-    public UserDto find(@PathVariable int id) throws NotFoundException {
-        return hateoasEntity.addUserLinks(userBuilder.build(userService.find(id)));
-    }
+//    @GetMapping("{id}")
+//    public UserDto find(@PathVariable int id) throws NotFoundException {
+//        return hateoasEntity.addUserLinks(userBuilder.build(userService.find(id)));
+//    }
 
     /**
      * Get list of all users
@@ -69,22 +69,22 @@ public class UserController {
      * @throws PageNumberException        indicates that number of page being viewed bigger then amount of pages
      *                                    found by criterion or less then 1
      */
-    @GetMapping
-    public CollectionModel<UserDto> findAll(@RequestParam(name = "page", defaultValue = "1") int page,
-                                            @RequestParam(name = "size", defaultValue = ControllerConstants.SIZE) int size) throws
-            PageElementAmountException,
-            PageNumberException,
-            NotFoundException,
-            EntityExistException {
-        List<User> users = userService.findAll(page, size);
-        List<UserDto> usersDto = new ArrayList<>();
-        for (User user : users) {
-            usersDto.add(hateoasEntity.addUserLinks(userBuilder.build(user)));
-        }
-        List<Link> links = paginationHateoas.addPaginationUserLinks(
-                size,
-                page,
-                userService.findAmount());
-        return CollectionModel.of(usersDto, links);
-    }
+//    @GetMapping
+//    public CollectionModel<UserDto> findAll(@RequestParam(name = "page", defaultValue = "1") int page,
+//                                            @RequestParam(name = "size", defaultValue = ControllerConstants.SIZE) int size) throws
+//            PageElementAmountException,
+//            PageNumberException,
+//            NotFoundException,
+//            EntityExistException {
+//        List<User> users = userService.findAll(page, size);
+//        List<UserDto> usersDto = new ArrayList<>();
+//        for (User user : users) {
+//            usersDto.add(hateoasEntity.addUserLinks(userBuilder.build(user)));
+//        }
+//        List<Link> links = paginationHateoas.addPaginationUserLinks(
+//                size,
+//                page,
+//                userService.findAmount());
+//        return CollectionModel.of(usersDto, links);
+//    }
 }

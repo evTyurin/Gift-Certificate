@@ -98,6 +98,7 @@ public class GiftCertificateController {
             PageElementAmountException,
             PageNumberException,
             EntityExistException {
+
         List<QueryCriteria> searchQueryCriteria = utilQueryCriteriaBuilder.createSearchCriteria(tagNames, certificateName, description);
         queryCriteriaValidator.searchCriteriaValidation(searchQueryCriteria);
         List<QueryCriteria> sortQueryCriteria = utilQueryCriteriaBuilder.createSortOrder(sortCriteria);

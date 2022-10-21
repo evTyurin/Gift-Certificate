@@ -12,25 +12,26 @@ import org.springframework.stereotype.Service;
 //@Service("customUserDetailsService")
 //@Component("customUserDetailsService")
 //@Service
-@Component
-public class CustomUserDetailsServiceImpl implements UserDetailsService {
-    private final UserService userService;
 
-    /**
-     * Instantiates a new JwtUserDetailsService.
-     *
-     * @param userService the user service
-     */
-    @Autowired
-    public CustomUserDetailsServiceImpl(UserService userService) {
-        this.userService = userService;
-    }
-
-    @SneakyThrows
-    @Override
-    public UserDetails loadUserByUsername(String login) {
-        User user = userService.find(login);
-        return userService.map(user);
-    }
-
-}
+//@Component
+//public class CustomUserDetailsServiceImpl implements UserDetailsService {
+//    private final UserService userService;
+//
+//    /**
+//     * Instantiates a new JwtUserDetailsService.
+//     *
+//     * @param userService the user service
+//     */
+//    @Autowired
+//    public CustomUserDetailsServiceImpl(UserService userService) {
+//        this.userService = userService;
+//    }
+//
+//    @SneakyThrows
+//    @Override
+//    public UserDetails loadUserByUsername(String login) {
+//        User user = userService.find(login);
+//        return userService.map(user);
+//    }
+//
+//}

@@ -23,11 +23,11 @@
             <version>${module.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.epam.esm</groupId>
-            <artifactId>oauth-authorization-server</artifactId>
-            <version>${module.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.epam.esm</groupId>-->
+<!--            <artifactId>oauth-authorization-server</artifactId>-->
+<!--            <version>${module.version}</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.epam.esm</groupId>

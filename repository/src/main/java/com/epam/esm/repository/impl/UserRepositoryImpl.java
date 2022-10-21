@@ -16,39 +16,39 @@ import java.util.Optional;
  * This class implements OrderRepository interface
  * This class perform read operation on database
  */
-@Repository
-@NoArgsConstructor
-public class UserRepositoryImpl implements UserRepository {
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Override
-    public Optional<User> find(int id) {
-        return Optional.ofNullable(entityManager.find(User.class, id));
-    }
-
-    @Override
-    public Optional<User> find(String login) {
-        return Optional.ofNullable(entityManager.find(User.class, login));
-    }
-
-    @Override
-    public List<User> findAll(int pageNumber, int pageElementAmount) {
-        final String READ_ALL_USERS = "SELECT user FROM User user";
-        TypedQuery<User> query = entityManager.createQuery(READ_ALL_USERS, User.class);
-        query.setFirstResult((pageNumber - 1) * pageElementAmount);
-        query.setMaxResults(pageElementAmount);
-        return query.getResultList();
-    }
-
-    @Override
-    public int findAmount() {
-        TypedQuery<Long> countQuery = entityManager.createQuery("SELECT COUNT(user) FROM User user", Long.class);
-        return (int) (double) countQuery.getSingleResult();
-    }
-
-    @Override
-    public void create(User user) {
-        entityManager.persist(user);
-    }
-}
+//@Repository
+//@NoArgsConstructor
+//public class UserRepositoryImpl implements UserRepository {
+//    @PersistenceContext
+//    private EntityManager entityManager;
+//
+//    @Override
+//    public Optional<User> find(int id) {
+//        return Optional.ofNullable(entityManager.find(User.class, id));
+//    }
+//
+////    @Override
+////    public Optional<User> find(String login) {
+////        return Optional.ofNullable(entityManager.find(User.class, login));
+////    }
+//
+//    @Override
+//    public List<User> findAll(int pageNumber, int pageElementAmount) {
+//        final String READ_ALL_USERS = "SELECT user FROM User user";
+//        TypedQuery<User> query = entityManager.createQuery(READ_ALL_USERS, User.class);
+//        query.setFirstResult((pageNumber - 1) * pageElementAmount);
+//        query.setMaxResults(pageElementAmount);
+//        return query.getResultList();
+//    }
+//
+//    @Override
+//    public int findAmount() {
+//        TypedQuery<Long> countQuery = entityManager.createQuery("SELECT COUNT(user) FROM User user", Long.class);
+//        return (int) (double) countQuery.getSingleResult();
+//    }
+//
+//    @Override
+//    public void create(User user) {
+//        entityManager.persist(user);
+//    }
+//}

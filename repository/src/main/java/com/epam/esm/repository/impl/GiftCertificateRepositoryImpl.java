@@ -41,12 +41,12 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     @Override
-    public Optional<GiftCertificate> find(int id) {
+    public Optional<GiftCertificate> findById(int id) {
         return Optional.ofNullable(entityManager.find(GiftCertificate.class, id));
     }
 
     @Override
-    public Optional<GiftCertificate> find(String certificateName) {
+    public Optional<GiftCertificate> findByName(String certificateName) {
         final String FIND_CERTIFICATE_BY_NAME = "SELECT gift_certificate FROM GiftCertificate gift_certificate WHERE gift_certificate.name=:name";
         TypedQuery<GiftCertificate> query = entityManager
                 .createQuery(FIND_CERTIFICATE_BY_NAME, GiftCertificate.class);

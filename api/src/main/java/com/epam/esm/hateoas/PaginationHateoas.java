@@ -205,7 +205,7 @@ public class PaginationHateoas {
      * Implement pagination for list of users dto
      *
      * @param size           amount of elements per page
-     * @param page           the number of page being viewed
+//     * @param page           the number of page being viewed
      * @param elementsAmount the amount of all instances
      * @return list of pagination links
      * @throws PageNumberException        indicates that number of page being viewed bigger then amount of pages
@@ -215,36 +215,36 @@ public class PaginationHateoas {
      *                                    are incorrect (less then 1 or bigger then 100)
      * @throws EntityExistException       indicates that user with this name already exist
      */
-    public List<Link> addPaginationUserLinks(int size,
-                                             int page,
-                                             int elementsAmount) throws
-            PageNumberException,
-            NotFoundException,
-            PageElementAmountException,
-            EntityExistException {
-        List<Link> links = new ArrayList<>();
-        int pagesAmount = getPagesAmount(elementsAmount, size);
-        links.add(linkTo(methodOn(UserController.class)
-                .findAll(1, size))
-                .withRel(HateoasConstants.FIRST));
-        if (hasPreviousPage(page)) {
-            links.add(linkTo(methodOn(UserController.class)
-                    .findAll(page - 1, size))
-                    .withRel(HateoasConstants.PREVIOUS));
-        }
-        links.add(linkTo(methodOn(UserController.class)
-                .findAll(page, size))
-                .withSelfRel());
-        if (hasNextPage(page, pagesAmount)) {
-            links.add(linkTo(methodOn(UserController.class)
-                    .findAll(page + 1, size))
-                    .withRel(HateoasConstants.NEXT));
-        }
-        links.add(linkTo(methodOn(UserController.class)
-                .findAll(pagesAmount, size))
-                .withRel(HateoasConstants.LAST));
-        return links;
-    }
+//    public List<Link> addPaginationUserLinks(int size,
+//                                             int page,
+//                                             int elementsAmount) throws
+//            PageNumberException,
+//            NotFoundException,
+//            PageElementAmountException,
+//            EntityExistException {
+//        List<Link> links = new ArrayList<>();
+//        int pagesAmount = getPagesAmount(elementsAmount, size);
+//        links.add(linkTo(methodOn(UserController.class)
+//                .findAll(1, size))
+//                .withRel(HateoasConstants.FIRST));
+//        if (hasPreviousPage(page)) {
+//            links.add(linkTo(methodOn(UserController.class)
+//                    .findAll(page - 1, size))
+//                    .withRel(HateoasConstants.PREVIOUS));
+//        }
+//        links.add(linkTo(methodOn(UserController.class)
+//                .findAll(page, size))
+//                .withSelfRel());
+//        if (hasNextPage(page, pagesAmount)) {
+//            links.add(linkTo(methodOn(UserController.class)
+//                    .findAll(page + 1, size))
+//                    .withRel(HateoasConstants.NEXT));
+//        }
+//        links.add(linkTo(methodOn(UserController.class)
+//                .findAll(pagesAmount, size))
+//                .withRel(HateoasConstants.LAST));
+//        return links;
+//    }
 
     private int getPagesAmount(int elementsAmount, int size) {
         return (int) Math.ceil((double) elementsAmount / size);

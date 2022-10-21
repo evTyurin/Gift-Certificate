@@ -34,9 +34,15 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework.hateoas</groupId>
+            <artifactId>spring-hateoas</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-envers</artifactId>
-            <version>5.6.3.Final</version>
+            <version>5.6.0.Final</version>
         </dependency>
 
         <dependency>

@@ -40,7 +40,7 @@ public interface OrderService {
      * @param giftCertificateIds the ids of gift certificates that consist in order
      * @throws NotFoundException indicates that user with this id not exist
      */
-    void create(int userId, List<Integer> giftCertificateIds) throws NotFoundException;
+//    void create(int userId, List<Integer> giftCertificateIds) throws NotFoundException;
 
     /**
      * Get amount of all orders in database

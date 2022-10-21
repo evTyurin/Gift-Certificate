@@ -12,6 +12,7 @@ import com.epam.esm.repository.UserRepository;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.constants.ExceptionCode;
 import com.epam.esm.service.util.Validation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,16 +29,16 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
+//    private final UserRepository userRepository;
     private final GiftCertificateRepository giftCertificateRepository;
     private final Validation validation;
 
     public OrderServiceImpl(GiftCertificateRepository giftCertificateRepository,
-                            UserRepository userRepository,
+//                            UserRepository userRepository,
                             OrderRepository orderRepository,
                             Validation validation) {
         this.giftCertificateRepository = giftCertificateRepository;
-        this.userRepository = userRepository;
+//        this.userRepository = userRepository;
         this.orderRepository = orderRepository;
         this.validation = validation;
     }
@@ -59,27 +60,28 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    @Transactional
-    @Override
-    public void create(int userId, List<Integer> giftCertificateIds) throws NotFoundException {
-        User user = userRepository.find(userId)
-                .orElseThrow(()
-                        -> new NotFoundException(userId, ExceptionCode.NOT_FOUND_EXCEPTION));
-
-        List<GiftCertificate> giftCertificates = new ArrayList<>();
-        for (Integer id : giftCertificateIds) {
-            giftCertificates.add(giftCertificateRepository.find(id).orElseThrow(()
-                    -> new NotFoundException(id, ExceptionCode.NOT_FOUND_EXCEPTION)));
-        }
-        double totalCost = giftCertificates.stream().mapToDouble(GiftCertificate::getPrice).sum();
-        orderRepository.create(Order
-                .builder()
-                .certificates(giftCertificates)
-                .user(user)
-                .price(totalCost)
-                .purchaseDate(LocalDateTime.now())
-                .build());
-    }
+//    @Transactional
+//    @Override
+//    public void create(int userId, List<Integer> giftCertificateIds) throws NotFoundException {
+////        User user = userRepository.find(userId)
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(()
+//                        -> new NotFoundException(userId, ExceptionCode.NOT_FOUND_EXCEPTION));
+//
+//        List<GiftCertificate> giftCertificates = new ArrayList<>();
+//        for (Integer id : giftCertificateIds) {
+//            giftCertificates.add(giftCertificateRepository.find(id).orElseThrow(()
+//                    -> new NotFoundException(id, ExceptionCode.NOT_FOUND_EXCEPTION)));
+//        }
+//        double totalCost = giftCertificates.stream().mapToDouble(GiftCertificate::getPrice).sum();
+//        orderRepository.create(Order
+//                .builder()
+//                .certificates(giftCertificates)
+//                .user(user)
+//                .price(totalCost)
+//                .purchaseDate(LocalDateTime.now())
+//                .build());
+//    }
 
     @Transactional
     @Override

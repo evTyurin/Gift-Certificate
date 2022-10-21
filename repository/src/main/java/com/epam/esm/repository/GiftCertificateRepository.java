@@ -2,6 +2,8 @@ package com.epam.esm.repository;
 
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.QueryCriteria;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,7 +13,9 @@ import java.util.Optional;
  * The interface provides methods to work with gift certificates information
  * in a data source.
  */
-public interface GiftCertificateRepository {
+public interface GiftCertificateRepository extends PagingAndSortingRepository<GiftCertificate, Integer>,
+        JpaSpecificationExecutor<GiftCertificate>
+{
 
     /**
      * Find gift certificate by id
@@ -19,7 +23,7 @@ public interface GiftCertificateRepository {
      * @param id the gift certificate id
      * @return the gift certificate optional
      */
-    Optional<GiftCertificate> find(int id);
+    Optional<GiftCertificate> findById(int id);
 
     /**
      * Find gift certificate by name
@@ -27,7 +31,7 @@ public interface GiftCertificateRepository {
      * @param name the gift certificate name
      * @return the gift certificate optional
      */
-    Optional<GiftCertificate> find(String name);
+    Optional<GiftCertificate> findByName(String name);
 
     /**
      * Delete gift certificate by id

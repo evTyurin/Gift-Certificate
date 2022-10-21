@@ -57,14 +57,14 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificate find(int giftCertificateId) throws NotFoundException {
         return giftCertificateRepository
-                .find(giftCertificateId)
+                .findById(giftCertificateId)
                 .orElseThrow(() -> new NotFoundException(giftCertificateId, ExceptionCode.NOT_FOUND_EXCEPTION));
     }
 
     @Transactional
     @Override
     public void delete(int giftCertificateId) throws NotFoundException {
-        if (!giftCertificateRepository.find(giftCertificateId).isPresent()) {
+        if (!giftCertificateRepository.findById(giftCertificateId).isPresent()) {
             throw new NotFoundException(giftCertificateId, ExceptionCode.NOT_FOUND_EXCEPTION);
         }
         giftCertificateRepository.delete(giftCertificateId);
@@ -74,11 +74,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public void update(int id, GiftCertificate updateGiftCertificate) throws EntityExistException, NotFoundException {
         GiftCertificate currantGiftCertificate = giftCertificateRepository
-                .find(id)
+                .findById(id)
                 .orElseThrow(() -> new NotFoundException(id, ExceptionCode.NOT_FOUND_EXCEPTION));
 
         if ((!updateGiftCertificate.getName().equals(currantGiftCertificate.getName())
-                && giftCertificateRepository.find(updateGiftCertificate.getName()).isPresent())) {
+                && giftCertificateRepository.findByName(updateGiftCertificate.getName()).isPresent())) {
             throw new EntityExistException(id, ExceptionCode.NOT_FOUND_EXCEPTION);
         }
 
@@ -94,10 +94,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public void partialUpdate(int giftCertificateId, GiftCertificate updateGiftCertificate) throws EntityExistException, NotFoundException {
         GiftCertificate currantGiftCertificate = giftCertificateRepository
-                .find(giftCertificateId)
+                .findById(giftCertificateId)
                 .orElseThrow(() -> new NotFoundException(giftCertificateId, ExceptionCode.NOT_FOUND_EXCEPTION));
         if (updateGiftCertificate.getName() != null && (!updateGiftCertificate.getName().equals(currantGiftCertificate.getName())
-                && giftCertificateRepository.find(updateGiftCertificate.getName()).isPresent())) {
+                && giftCertificateRepository.findByName(updateGiftCertificate.getName()).isPresent())) {
             throw new EntityExistException(giftCertificateId, ExceptionCode.NOT_FOUND_EXCEPTION);
         }
         if (updateGiftCertificate.getTags() != null && !updateGiftCertificate.getTags().isEmpty()) {
@@ -115,7 +115,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     @Override
     public void create(GiftCertificate giftCertificate) throws EntityExistException {
-        if (giftCertificateRepository.find(giftCertificate.getName()).isPresent()) {
+        if (giftCertificateRepository.findByName(giftCertificate.getName()).isPresent()) {
             throw new EntityExistException(giftCertificate.getId(), ExceptionCode.ENTITY_EXIST_EXCEPTION);
         }
         giftCertificate.setCreateDate(LocalDateTime.now());

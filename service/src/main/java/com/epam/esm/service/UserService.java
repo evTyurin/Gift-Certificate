@@ -13,15 +13,15 @@ import java.util.List;
 
 public interface UserService {
 
-    /**
-     * Find user by id
-     *
-     * @param id the user id
-     * @return the user entity
-     * @throws NotFoundException indicates that user with this id not exist
-     */
-    User find(int id) throws NotFoundException;
-
+//    /**
+//     * Find user by id
+//     *
+//     * @param id the user id
+//     * @return the user entity
+//     * @throws NotFoundException indicates that user with this id not exist
+//     */
+//    User find(int id) throws NotFoundException;
+//
     /**
      * Get all users dto
      *
@@ -36,19 +36,19 @@ public interface UserService {
     List<User> findAll(int pageNumber, int pageElementAmount) throws
             PageElementAmountException,
             PageNumberException;
-
-    /**
-     * Get amount of all tags in database
-     *
-     * @return number of all tags in database
-     */
-    int findAmount();
-
-    void create(User user) throws ExpectationFailedException, NotFoundLoginException, EntityExistException;
-
-    User find(String login, String password) throws NotFoundException, NotFoundLoginException;
+//
+//    /**
+//     * Get amount of all tags in database
+//     *
+//     * @return number of all tags in database
+//     */
+//    int findAmount();
+//
+//    void create(User user) throws ExpectationFailedException, NotFoundLoginException, EntityExistException;
+//
+//    User find(String login, String password) throws NotFoundException, NotFoundLoginException;
 
     User find(String login) throws NotFoundException, NotFoundLoginException;
 
-    UserDetails map(User user);
+//    UserDetails map(User user);
 }
